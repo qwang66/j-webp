@@ -12,6 +12,8 @@ However, coders pefer using jar package instead of source java code in personal 
 
 Because it is not in maven repo,  so you have to put the jar file `webp-imageio-core-{version}.jar` into libs folder of your project manually.
 
+[Download jar](https://github.com/nintha/webp-imageio-core/releases)
+
 if you use gradle, you can put it into `src/main/resource/libs`, and edit config file`build.gradle` to add local dependencies
 
 ```groovy
