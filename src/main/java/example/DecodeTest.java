@@ -9,8 +9,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class DecodingTest {
-
+public class DecodeTest {
     public static void main(String args[]) throws IOException {
         String inputWebpPath = "test_pic/test.webp";
         String outputJpgPath = "test_pic/test_.jpg";

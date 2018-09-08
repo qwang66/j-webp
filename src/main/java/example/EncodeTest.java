@@ -10,8 +10,7 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 
-public class EncodingTest {
-
+public class EncodeTest {
     public static void main(String args[]) throws IOException {
         String inputPngPath = "test_pic/test.png";
         String inputJpgPath = "test_pic/test.jpg";

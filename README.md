@@ -1,12 +1,35 @@
 # webp-imageio-core
 forked from qwong/j-webp
-Java Image I/O reader and writer for the Google WebP image format.
+Java Image I/O reader and writer for the Google WebP image format without system lib file.
 
-基于[webp project of Luciad](https://bitbucket.org/luciad/webp-imageio) 0.4.2版本修改.
+In source program, coders need to put native lib files like .so/.dll/.dylib into the folder of `java.library.path`.
 
-实际上只修改了`com.luciad.imageio.webp.WebP.loadNativeLibrary`这一个方法.  
-因为按他默认的加载方式, 需要把native的so/dll/dylib等文件放到OS对应的`java.library.path`对应的目录才能加载到, 这会给部署带来一些不便.
+For easier to use, qwong/j-webp (bases on [webp project of Luciad](https://bitbucket.org/luciad/webp-imageio) 0.4.2) import [native-lib-loader](https://github.com/scijava/native-lib-loader) to load native lib files from project resource folder,   instead of `java.library.path`. (more details to see `com.luciad.imageio.webp.WebP.loadNativeLibrary`)
 
-所以我们这里换成了[native-lib-loader](https://github.com/scijava/native-lib-loader)自动加载, 编译构建好的包里已经包含了各种OS上的native文件, 使用时会自动加载.
+However, coders pefer using jar package instead of source java code in personal project. So I fork and edit qwong/j-webp to privide a usable jar. It is a fat jar includes dependencies and native lib file (includes windows/linux/mac both 32&64bit).
 
-具体使用方法可参看`src/main/java/example`下的源码.
+## Usage
+
+Because it is not in maven repo,  so you have to put the jar file `webp-imageio-core-{version}.jar` into libs folder of your project manually.
+
+if you use gradle, you can put it into `src/main/resource/libs`, and edit config file`build.gradle` to add local dependencies
+
+```groovy
+dependencies {
+    compile fileTree(dir:'src/main/resources/libs',include:['*.jar'])
+}
+```
+
+if you use maven, you can put it `${project.basedir}/libs`, and edit config file `pom.xml` to add local dependencies
+
+```xml
+<dependency>  
+    <groupId>com.github.nintha</groupId>  
+    <artifactId>webp-imageio-core</artifactId>  
+    <version>{versoin}</version>  
+    <scope>system</scope>  
+    <systemPath>${project.basedir}/libs/webp-imageio-core-{version}.jar</systemPath>  
+</dependency>
+```
+
+The usage of api, you can see example cases in `src/main/java/example`.
