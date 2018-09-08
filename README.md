@@ -1,4 +1,5 @@
-# j-webp
+# webp-imageio-core
+forked from qwong/j-webp
 Java Image I/O reader and writer for the Google WebP image format.
 
 基于[webp project of Luciad](https://bitbucket.org/luciad/webp-imageio) 0.4.2版本修改.
