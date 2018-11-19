@@ -19,43 +19,24 @@ import javax.imageio.ImageWriteParam;
 import java.util.Locale;
 
 public class WebPWriteParam extends ImageWriteParam {
-  static {
-    WebP.loadNativeLibrary();
-  }
+  public static final int LOSSY_COMPRESSION = 0;
+  public static final int LOSSLESS_COMPRESSION = 1;
 
-  long fPointer;
-  private final int defaultLossless;
+  private final boolean fDefaultLossless;
+  private WebPEncoderOptions fOptions;
 
   public WebPWriteParam( Locale aLocale ) {
     super( aLocale );
-    fPointer = createConfig();
-    if ( fPointer == 0 ) {
-      throw new OutOfMemoryError();
-    }
-    defaultLossless = getLossless( fPointer );
+    fOptions = new WebPEncoderOptions();
+    fDefaultLossless = fOptions.isLossless();
     canWriteCompressed = true;
     compressionTypes = new String[]{
         "Lossy",
         "Lossless"
     };
-    compressionType = compressionTypes[defaultLossless];
-    compressionQuality = getQuality( fPointer ) / 100f;
+    compressionType = compressionTypes[fDefaultLossless ? LOSSLESS_COMPRESSION : LOSSY_COMPRESSION];
+    compressionQuality = fOptions.getCompressionQuality() / 100f;
     compressionMode = MODE_EXPLICIT;
-  }
-
-  @Override
-  protected void finalize() throws Throwable {
-    super.finalize();
-    deleteConfig( fPointer );
-    fPointer = 0L;
-  }
-
-  private static native long createConfig();
-
-  private static native void deleteConfig( long aPointer );
-
-  long getPointer() {
-    return fPointer;
   }
 
   @Override
@@ -66,7 +47,7 @@ public class WebPWriteParam extends ImageWriteParam {
   @Override
   public void setCompressionQuality( float quality ) {
     super.setCompressionQuality( quality );
-    setQuality( fPointer, quality * 100f );
+    fOptions.setCompressionQuality( quality * 100f );
   }
 
   @Override
@@ -74,7 +55,7 @@ public class WebPWriteParam extends ImageWriteParam {
     super.setCompressionType( compressionType );
     for ( int i = 0; i < compressionTypes.length; i++ ) {
       if ( compressionTypes[i].equals( compressionType ) ) {
-        setLossless( fPointer, i );
+        fOptions.setLossless( i == LOSSLESS_COMPRESSION );
         break;
       }
     }
@@ -84,254 +65,170 @@ public class WebPWriteParam extends ImageWriteParam {
   @Override
   public void unsetCompression() {
     super.unsetCompression();
-    setLossless( fPointer, defaultLossless );
+    fOptions.setLossless( fDefaultLossless );
   }
 
-  public int getTargetSize() {
-    return getTargetSize( fPointer );
+  public void setSnsStrength(int aSnsStrength) {
+    fOptions.setSnsStrength(aSnsStrength);
   }
 
-  public void setTargetSize( int aTargetSize ) {
-    setTargetSize( fPointer, aTargetSize );
-  }
-
-  public float getTargetPSNR() {
-    return getTargetPSNR( fPointer );
-  }
-
-  public void setTargetPSNR( float aTargetPSNR ) {
-    setTargetPSNR( fPointer, aTargetPSNR );
-  }
-
-  public int getMethod() {
-    return getMethod( fPointer );
-  }
-
-  public void setMethod( int aMethod ) {
-    setMethod( fPointer, aMethod );
+  public void setAlphaQuality(int aAlphaQuality) {
+    fOptions.setAlphaQuality(aAlphaQuality);
   }
 
   public int getSegments() {
-    return getSegments( fPointer );
-  }
-
-  public void setSegments( int aSegments ) {
-    setSegments( fPointer, aSegments );
-  }
-
-  public int getSnsStrength() {
-    return getSnsStrength( fPointer );
-  }
-
-  public void setSnsStrength( int aSnsStrength ) {
-    setSnsStrength( fPointer, aSnsStrength );
-  }
-
-  public int getFilterStrength() {
-    return getFilterStrength( fPointer );
-  }
-
-  public void setFilterStrength( int aFilterStrength ) {
-    setFilterStrength( fPointer, aFilterStrength );
-  }
-
-  public int getFilterSharpness() {
-    return getFilterSharpness( fPointer );
-  }
-
-  public void setFilterSharpness( int aFilterSharpness ) {
-    setFilterSharpness( fPointer, aFilterSharpness );
-  }
-
-  public int getFilterType() {
-    return getFilterType( fPointer );
-  }
-
-  public void setFilterType( int aFilterType ) {
-    setFilterType( fPointer, aFilterType );
-  }
-
-  public boolean isAutoAdjustFilterStrength() {
-    return getAutofilter( fPointer ) != 0;
-  }
-
-  public void setAutoAdjustFilterStrength( boolean aAutofilter ) {
-    setAutofilter( fPointer, aAutofilter ? 1 : 0 );
-  }
-
-  public int getEntropyAnalysisPassCount() {
-    return getPass( fPointer );
-  }
-
-  public void setEntropyAnalysisPassCount( int aPass ) {
-    setPass( fPointer, aPass );
-  }
-
-  public boolean isShowCompressed() {
-    return getShowCompressed( fPointer ) != 0;
-  }
-
-  public void setShowCompressed( boolean aShowCompressed ) {
-    setShowCompressed( fPointer, aShowCompressed ? 1 : 0 );
+    return fOptions.getSegments();
   }
 
   public int getPreprocessing() {
-    return getPreprocessing( fPointer );
+    return fOptions.getPreprocessing();
   }
 
-  public void setPreprocessing( int aPreprocessing ) {
-    setPreprocessing( fPointer, aPreprocessing );
+  public int getFilterStrength() {
+    return fOptions.getFilterStrength();
+  }
+
+  public void setEmulateJpegSize(boolean aEmulateJpegSize) {
+    fOptions.setEmulateJpegSize(aEmulateJpegSize);
   }
 
   public int getPartitions() {
-    return getPartitions( fPointer );
+    return fOptions.getPartitions();
   }
 
-  public void setPartitions( int aPartitions ) {
-    setPartitions( fPointer, aPartitions );
+  public void setTargetPSNR(float aTargetPSNR) {
+    fOptions.setTargetPSNR(aTargetPSNR);
+  }
+
+  public int getEntropyAnalysisPassCount() {
+    return fOptions.getEntropyAnalysisPassCount();
   }
 
   public int getPartitionLimit() {
-    return getPartitionLimit( fPointer );
+    return fOptions.getPartitionLimit();
   }
 
-  public void setPartitionLimit( int aPartitionLimit ) {
-    setPartitionLimit( fPointer, aPartitionLimit );
+  public int getFilterType() {
+    return fOptions.getFilterType();
   }
 
-  public int getAlphaCompression() {
-    return getAlphaCompression( fPointer );
-  }
-
-  public void setAlphaCompression( int aAlphaCompression ) {
-    setAlphaCompression( fPointer, aAlphaCompression );
-  }
-
-  public int getAlphaFiltering() {
-    return getAlphaFiltering( fPointer );
-  }
-
-  public void setAlphaFiltering( int aAlphaFiltering ) {
-    setAlphaFiltering( fPointer, aAlphaFiltering );
+  public int getFilterSharpness() {
+    return fOptions.getFilterSharpness();
   }
 
   public int getAlphaQuality() {
-    return getAlphaQuality( fPointer );
+    return fOptions.getAlphaQuality();
   }
 
-  public void setAlphaQuality( int aAlphaQuality ) {
-    setAlphaQuality( fPointer, aAlphaQuality );
-  }
-
-  public boolean isEmulateJpegSize() {
-    return getEmulateJpegSize( fPointer ) != 0;
-  }
-
-  public void setEmulateJpegSize( boolean aEmulateJpegSize ) {
-    setEmulateJpegSize( fPointer, aEmulateJpegSize ? 1 : 0 );
-  }
-
-  public int getThreadLevel() {
-    return getThreadLevel( fPointer );
-  }
-
-  public void setThreadLevel( int aThreadLevel ) {
-    setThreadLevel( fPointer, aThreadLevel );
+  public boolean isShowCompressed() {
+    return fOptions.isShowCompressed();
   }
 
   public boolean isReduceMemoryUsage() {
-    return getLowMemory( fPointer ) != 0;
+    return fOptions.isReduceMemoryUsage();
   }
 
-  public void setReduceMemoryUsage( boolean aLowMemory ) {
-    setLowMemory( fPointer, aLowMemory ? 1 : 0 );
+  public void setThreadLevel(int aThreadLevel) {
+    fOptions.setThreadLevel(aThreadLevel);
   }
 
-  private static native float getQuality( long aPointer );
+  public boolean isAutoAdjustFilterStrength() {
+    return fOptions.isAutoAdjustFilterStrength();
+  }
 
-  private static native void setQuality( long aPointer, float aQuality );
+  public void setReduceMemoryUsage(boolean aLowMemory) {
+    fOptions.setReduceMemoryUsage(aLowMemory);
+  }
 
-  private static native int getTargetSize( long aPointer );
+  public void setFilterStrength(int aFilterStrength) {
+    fOptions.setFilterStrength(aFilterStrength);
+  }
 
-  private static native void setTargetSize( long aPointer, int aTargetSize );
+  public int getTargetSize() {
+    return fOptions.getTargetSize();
+  }
 
-  private static native float getTargetPSNR( long aPointer );
+  public void setEntropyAnalysisPassCount(int aPass) {
+    fOptions.setEntropyAnalysisPassCount(aPass);
+  }
 
-  private static native void setTargetPSNR( long aPointer, float aTargetPSNR );
+  public void setFilterSharpness(int aFilterSharpness) {
+    fOptions.setFilterSharpness(aFilterSharpness);
+  }
 
-  private static native int getMethod( long aPointer );
+  public int getAlphaFiltering() {
+    return fOptions.getAlphaFiltering();
+  }
 
-  private static native void setMethod( long aPointer, int aMethod );
+  public int getSnsStrength() {
+    return fOptions.getSnsStrength();
+  }
 
-  private static native int getSegments( long aPointer );
+  public void setPartitionLimit(int aPartitionLimit) {
+    fOptions.setPartitionLimit(aPartitionLimit);
+  }
 
-  private static native void setSegments( long aPointer, int aSegments );
+  public void setMethod(int aMethod) {
+    fOptions.setMethod(aMethod);
+  }
 
-  private static native int getSnsStrength( long aPointer );
+  public void setAlphaFiltering(int aAlphaFiltering) {
+    fOptions.setAlphaFiltering(aAlphaFiltering);
+  }
 
-  private static native void setSnsStrength( long aPointer, int aSnsStrength );
+  public int getMethod() {
+    return fOptions.getMethod();
+  }
 
-  private static native int getFilterStrength( long aPointer );
+  public void setFilterType(int aFilterType) {
+    fOptions.setFilterType(aFilterType);
+  }
 
-  private static native void setFilterStrength( long aPointer, int aFilterStrength );
+  public void setPartitions(int aPartitions) {
+    fOptions.setPartitions(aPartitions);
+  }
 
-  private static native int getFilterSharpness( long aPointer );
+  public void setAutoAdjustFilterStrength(boolean aAutofilter) {
+    fOptions.setAutoAdjustFilterStrength(aAutofilter);
+  }
 
-  private static native void setFilterSharpness( long aPointer, int aFilterSharpness );
+  public boolean isEmulateJpegSize() {
+    return fOptions.isEmulateJpegSize();
+  }
 
-  private static native int getFilterType( long aPointer );
+  public int getAlphaCompression() {
+    return fOptions.getAlphaCompression();
+  }
 
-  private static native void setFilterType( long aPointer, int aFilterType );
+  public void setShowCompressed(boolean aShowCompressed) {
+    fOptions.setShowCompressed(aShowCompressed);
+  }
 
-  private static native int getAutofilter( long aPointer );
+  public void setSegments(int aSegments) {
+    fOptions.setSegments(aSegments);
+  }
 
-  private static native void setAutofilter( long aPointer, int aAutofilter );
+  public float getTargetPSNR() {
+    return fOptions.getTargetPSNR();
+  }
 
-  private static native int getPass( long aPointer );
+  public int getThreadLevel() {
+    return fOptions.getThreadLevel();
+  }
 
-  private static native void setPass( long aPointer, int aPass );
+  public void setTargetSize(int aTargetSize) {
+    fOptions.setTargetSize(aTargetSize);
+  }
 
-  private static native int getShowCompressed( long aPointer );
+  public void setAlphaCompression(int aAlphaCompression) {
+    fOptions.setAlphaCompression(aAlphaCompression);
+  }
 
-  private static native void setShowCompressed( long aPointer, int aShowCompressed );
+  public void setPreprocessing(int aPreprocessing) {
+    fOptions.setPreprocessing(aPreprocessing);
+  }
 
-  private static native int getPreprocessing( long aPointer );
-
-  private static native void setPreprocessing( long aPointer, int aPreprocessing );
-
-  private static native int getPartitions( long aPointer );
-
-  private static native void setPartitions( long aPointer, int aPartitions );
-
-  private static native int getPartitionLimit( long aPointer );
-
-  private static native void setPartitionLimit( long aPointer, int aPartitionLimit );
-
-  private static native int getAlphaCompression( long aPointer );
-
-  private static native void setAlphaCompression( long aPointer, int aAlphaCompression );
-
-  private static native int getAlphaFiltering( long aPointer );
-
-  private static native void setAlphaFiltering( long aPointer, int aAlphaFiltering );
-
-  private static native int getAlphaQuality( long aPointer );
-
-  private static native void setAlphaQuality( long aPointer, int aAlphaQuality );
-
-  private static native int getLossless( long aPointer );
-
-  private static native void setLossless( long aPointer, int aLossless );
-
-  private static native int getEmulateJpegSize( long aPointer );
-
-  private static native void setEmulateJpegSize( long aPointer, int aEmulateJpegSize );
-
-  private static native int getThreadLevel( long aPointer );
-
-  private static native void setThreadLevel( long aPointer, int aThreadLevel );
-
-  private static native int getLowMemory( long aPointer );
-
-  private static native void setLowMemory( long aPointer, int aLowMemory );
+  WebPEncoderOptions getEncoderOptions() {
+    return fOptions;
+  }
 }

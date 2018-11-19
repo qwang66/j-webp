@@ -8,6 +8,8 @@ For easier to use, qwong/j-webp (bases on [webp project of Luciad](https://bitbu
 
 However, coders pefer using jar package instead of source java code in personal project. So I fork and edit qwong/j-webp to privide a usable jar. It is a fat jar includes dependencies and native lib file (includes windows/linux/mac both 32&64bit).
 
+Update 20181119: sync from [webp project of Luciad](https://bitbucket.org/luciad/webp-imageio) 1.0.0
+
 ## Usage
 
 Because it is not in maven repo,  so you have to put the jar file `webp-imageio-core-{version}.jar` into libs folder of your project manually.

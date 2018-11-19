@@ -30,6 +30,8 @@ public class EncodeTest {
         writer.setOutput(new FileImageOutputStream(new File(outputWebpPath)));
 
         // Encode
+        long st = System.currentTimeMillis();
         writer.write(null, new IIOImage(image, null, null), writeParam);
+        System.out.println("cost: " + (System.currentTimeMillis() - st));
     }
 }

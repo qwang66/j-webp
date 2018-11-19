@@ -18,183 +18,101 @@ package com.luciad.imageio.webp;
 import javax.imageio.ImageReadParam;
 
 public final class WebPReadParam extends ImageReadParam {
-  static {
-    WebP.loadNativeLibrary();
-  }
-
-  long fPointer;
+  private WebPDecoderOptions fOptions;
 
   public WebPReadParam() {
-    fPointer = createDecoderOptions();
-    if ( fPointer == 0 ) {
-      throw new OutOfMemoryError();
-    }
+    fOptions = new WebPDecoderOptions();
   }
 
-  @Override
-  protected void finalize() throws Throwable {
-    super.finalize();
-    deleteDecoderOptions( fPointer );
-    fPointer = 0L;
+  public void setScaledHeight(int aScaledHeight) {
+    fOptions.setScaledHeight(aScaledHeight);
+  }
+
+  public void setUseScaling(boolean aUseScaling) {
+    fOptions.setUseScaling(aUseScaling);
+  }
+
+  public void setUseThreads(boolean aUseThreads) {
+    fOptions.setUseThreads(aUseThreads);
   }
 
   public int getCropHeight() {
-    return getCropHeight( fPointer );
-  }
-
-  public void setCropHeight( int aCropHeight ) {
-    setCropHeight( fPointer, aCropHeight );
-  }
-
-  public int getCropLeft() {
-    return getCropLeft( fPointer );
-  }
-
-  public void setCropLeft( int aCropLeft ) {
-    setCropLeft( fPointer, aCropLeft );
-  }
-
-  public int getCropTop() {
-    return getCropTop( fPointer );
-  }
-
-  public void setCropTop( int aCropTop ) {
-    setCropTop( fPointer, aCropTop );
-  }
-
-  public int getCropWidth() {
-    return getCropWidth( fPointer );
-  }
-
-  public void setCropWidth( int aCropWidth ) {
-    setCropWidth( fPointer, aCropWidth );
-  }
-
-  public boolean isForceRotation() {
-    return isForceRotation( fPointer );
-  }
-
-  public void setForceRotation( boolean aForceRotation ) {
-    setForceRotation( fPointer, aForceRotation );
-  }
-
-  public boolean isEnhancement() {
-    return !isNoEnhancement( fPointer );
-  }
-
-  public void setEnhancement( boolean aEnhancement ) {
-    setNoEnhancement( fPointer, !aEnhancement );
-  }
-
-  public boolean isFancyUpsampling() {
-    return !isNoFancyUpsampling( fPointer );
-  }
-
-  public void setFancyUpsampling( boolean aFancyUpsampling ) {
-    setNoFancyUpsampling( fPointer, !aFancyUpsampling );
-  }
-
-  public int getScaledHeight() {
-    return getScaledHeight( fPointer );
-  }
-
-  public void setScaledHeight( int aScaledHeight ) {
-    setScaledHeight( fPointer, aScaledHeight );
+    return fOptions.getCropHeight();
   }
 
   public int getScaledWidth() {
-    return getScaledWidth( fPointer );
-  }
-
-  public void setScaledWidth( int aScaledWidth ) {
-    setScaledWidth( fPointer, aScaledWidth );
+    return fOptions.getScaledWidth();
   }
 
   public boolean isUseCropping() {
-    return isUseCropping( fPointer );
+    return fOptions.isUseCropping();
   }
 
-  public void setUseCropping( boolean aUseCropping ) {
-    setUseCropping( fPointer, aUseCropping );
-  }
-
-  public boolean isUseScaling() {
-    return isUseScaling( fPointer );
-  }
-
-  public void setUseScaling( boolean aUseScaling ) {
-    setUseScaling( fPointer, aUseScaling );
-  }
-
-  public boolean isUseThreads() {
-    return isUseThreads( fPointer );
-  }
-
-  public void setUseThreads( boolean aUseThreads ) {
-    setUseThreads( fPointer, aUseThreads );
+  public void setCropWidth(int aCropWidth) {
+    fOptions.setCropWidth(aCropWidth);
   }
 
   public boolean isBypassFiltering() {
-    return isBypassFiltering( fPointer );
+    return fOptions.isBypassFiltering();
   }
 
-  public void setBypassFiltering( boolean aBypassFiltering ) {
-    setBypassFiltering( fPointer, aBypassFiltering );
+  public int getCropLeft() {
+    return fOptions.getCropLeft();
   }
 
-  private static native long createDecoderOptions();
+  public int getCropWidth() {
+    return fOptions.getCropWidth();
+  }
 
-  private static native void deleteDecoderOptions( long aPointer );
+  public int getScaledHeight() {
+    return fOptions.getScaledHeight();
+  }
 
-  private static native int getCropHeight( long aPointer );
+  public void setBypassFiltering(boolean aBypassFiltering) {
+    fOptions.setBypassFiltering(aBypassFiltering);
+  }
 
-  private static native void setCropHeight( long aPointer, int aCropHeight );
+  public void setUseCropping(boolean aUseCropping) {
+    fOptions.setUseCropping(aUseCropping);
+  }
 
-  private static native int getCropLeft( long aPointer );
+  public void setCropHeight(int aCropHeight) {
+    fOptions.setCropHeight(aCropHeight);
+  }
 
-  private static native void setCropLeft( long aPointer, int aCropLeft );
+  public void setFancyUpsampling(boolean aFancyUpsampling) {
+    fOptions.setFancyUpsampling(aFancyUpsampling);
+  }
 
-  private static native int getCropTop( long aPointer );
+  public boolean isUseThreads() {
+    return fOptions.isUseThreads();
+  }
 
-  private static native void setCropTop( long aPointer, int aCropTop );
+  public boolean isFancyUpsampling() {
+    return fOptions.isFancyUpsampling();
+  }
 
-  private static native int getCropWidth( long aPointer );
+  public boolean isUseScaling() {
+    return fOptions.isUseScaling();
+  }
 
-  private static native void setCropWidth( long aPointer, int aCropWidth );
+  public void setCropLeft(int aCropLeft) {
+    fOptions.setCropLeft(aCropLeft);
+  }
 
-  private static native boolean isForceRotation( long aPointer );
+  public int getCropTop() {
+    return fOptions.getCropTop();
+  }
 
-  private static native void setForceRotation( long aPointer, boolean aForceRotation );
+  public void setScaledWidth(int aScaledWidth) {
+    fOptions.setScaledWidth(aScaledWidth);
+  }
 
-  private static native boolean isNoEnhancement( long aPointer );
+  public void setCropTop(int aCropTop) {
+    fOptions.setCropTop(aCropTop);
+  }
 
-  private static native void setNoEnhancement( long aPointer, boolean aNoEnhancement );
-
-  private static native boolean isNoFancyUpsampling( long aPointer );
-
-  private static native void setNoFancyUpsampling( long aPointer, boolean aFancyUpsampling );
-
-  private static native int getScaledHeight( long aPointer );
-
-  private static native void setScaledHeight( long aPointer, int aScaledHeight );
-
-  private static native int getScaledWidth( long aPointer );
-
-  private static native void setScaledWidth( long aPointer, int aScaledWidth );
-
-  private static native boolean isUseCropping( long aPointer );
-
-  private static native void setUseCropping( long aPointer, boolean aUseCropping );
-
-  private static native boolean isUseScaling( long aPointer );
-
-  private static native void setUseScaling( long aPointer, boolean aUseScaling );
-
-  private static native boolean isUseThreads( long aPointer );
-
-  private static native void setUseThreads( long aPointer, boolean aUseThreads );
-
-  private static native boolean isBypassFiltering( long aPointer );
-
-  private static native void setBypassFiltering( long aPointer, boolean aBypassFiltering );
+  WebPDecoderOptions getDecoderOptions() {
+    return fOptions;
+  }
 }
