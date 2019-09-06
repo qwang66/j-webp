@@ -95,8 +95,8 @@ cmake .. -G "Visual Studio 16 2019"
 
 ## Compiling the Java library
 
-- Run `./gradlew build -x test` in the root of the project
-- The compiled Java library can be found under the `build` directory
+- Run `mvn install` in the root of the project
+- The compiled Java library can be found under the `target`directory
 
 
 
