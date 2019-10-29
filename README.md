@@ -10,6 +10,8 @@ However, coders pefer using jar package instead of source java code in personal 
 
 Update 20181119: sync from [webp project of Luciad](https://bitbucket.org/luciad/webp-imageio) 1.0.0
 
+Update 20191029: [prankstrisse](https://github.com/prankstrisse) provides osx64 dylib file
+
 ## Usage
 
 Because it is not in maven repo,  so you have to put the jar file `webp-imageio-core-{version}.jar` into libs folder of your project manually.
