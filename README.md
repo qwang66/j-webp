@@ -12,7 +12,10 @@ Update 20181119: sync from [webp project of Luciad](https://bitbucket.org/luciad
 
 Update 20190912: update win64 dll to libwebp-1.0.3
 
-Update 20191029: [prankstrisse](https://github.com/prankstrisse) provides osx64 dylib file
+Update 20191029: 
+
+- [prankstrisse](https://github.com/prankstrisse) provides osx64 dylib file
+- remove `x32`  .so/.dll/.dylib file
 
 ## Usage
 
